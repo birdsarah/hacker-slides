@@ -1,3 +1,18 @@
+# Local Hacker Slides
+
+To run hacker slides locally:
+
+1. Clone this repo
+2. Install flask (`conda install flask` or `pip install flask`)
+3. Make a file slides.md in the top-level directory (to get started try `cp initial-slides.md slides.md`)
+4. Run Hacker Slides: `python slides.py`
+
+
+To publish, to gh-pages, copy this entire direcory to your gh-pages directory. (You can prune out some things
+that you don't need for displaying things but a complete copy is easiest). 
+
+----
+
 # Sandstorm Hacker Slides
 
 ![Screenshot](https://cloud.githubusercontent.com/assets/1058938/6180867/9acdea84-b2df-11e4-8ae8-b01f2c4d7e1d.png)

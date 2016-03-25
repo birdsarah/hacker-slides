@@ -16,12 +16,12 @@ function initializeReveal() {
 
       // Optional reveal.js plugins
     dependencies: [
-    { src: '/static/revealjs/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-    { src: '/static/revealjs/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-    { src: '/static/revealjs/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); }, callback: function() { externalLinksInNewWindow(); } },
-      { src: '/static/revealjs/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-      { src: '/static/revealjs/plugin/zoom-js/zoom.js', async: true },
-        { src: '/static/revealjs/plugin/notes/notes.js', async: true }
+    { src: 'revealjs/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: 'revealjs/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'revealjs/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); }, callback: function() { externalLinksInNewWindow(); } },
+      { src: 'revealjs/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'revealjs/plugin/zoom-js/zoom.js', async: true },
+        { src: 'revealjs/plugin/notes/notes.js', async: true }
     ]
   });
 }
@@ -36,7 +36,7 @@ function highlightAnyCodeBlocks() {
 
 function insertMarkdownReference() {
   var markdownReference = $('<section/>', {
-    'data-markdown': "/slides.md",
+    'data-markdown': "../slides.md",
     'data-separator': "^-( *)-( *)-( *-*)*",
     'data-separator-notes': "^Note:",
     'data-charset': "utf-8"

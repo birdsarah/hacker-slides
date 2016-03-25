@@ -36,7 +36,7 @@ $(function() {
   editor.getSession().setUseWrapMode(true);
   editor.setShowPrintMargin(true);
 
-  $.get('/slides.md', function(data) {
+  $.get('../slides.md', function(data) {
     editor.setValue(data, -1);
   });
 

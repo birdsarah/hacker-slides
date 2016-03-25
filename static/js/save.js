@@ -8,7 +8,7 @@ $(function() {
   window.save = function() {
     var editor = ace.edit("editor");
 
-    $.ajax("/slides.md", {
+    $.ajax("../slides.md", {
       type: 'put',
       data: editor.getValue(),
       success: reloadMarkdown
