@@ -1,54 +1,75 @@
+function plainTextMode() {
+  var queryString = document.location.search;
+  return queryString.indexOf('plain-text-mode') > -1;
+}
+
 $(function() {
-
-  function slideSeparatorLines(text) {
-    var lines = text.split('\n');
-
-    var separatorLineNumbers = [];
-
-    for (i = 0; i < lines.length; i++) {
-      var line = lines[i];
-      if (line === '---') {
-        separatorLineNumbers.push(i);
-      }
-    }
-
-    return separatorLineNumbers;
-  }
 
   function currentCursorSlide(cursorLine) {
     var text = ace.edit("editor").getValue();
-    var separatorPositions = slideSeparatorLines(text);
-    var slideNumber = separatorPositions.length;
-    separatorPositions.every(function(pos, num) {
-      if (pos >= cursorLine) {
-        slideNumber = num;
-        return false;
+    var lines = text.split('\n');
+    var line = "";
+    var slide = 0;
+    var subSlide = 0;
+
+    for (i = 0; i <= cursorLine; i++) {
+      if (line.substring(0,3) === '---') {
+        slide = slide + 1;
+        subSlide = 0;
+      } else if (line.substring(0,2) === '--') {
+        subSlide = subSlide + 1;
       }
-      return true;
-    });
+      line = lines[i];
+    }
+    var slideNumber = {
+      "h" : slide,
+      "v" : subSlide
+    };
     return slideNumber;
+  } 
+
+  function setupAceEditor() {
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/chrome");
+    editor.getSession().setMode("ace/mode/markdown");
+    editor.getSession().setUseWrapMode(true);
+    editor.setShowPrintMargin(true);
+
+    $.get('/slides.md', function(data) {
+      editor.setValue(data, -1);
+    });
+
+    ace.edit('editor').getSession().selection.on('changeCursor', function(e) {
+      var cursorRow = ace.edit('editor').getCursorPosition().row;
+      var currentSlide = currentCursorSlide(cursorRow);
+      $('#slides-frame')[0].contentWindow.postMessage(JSON.stringify({
+        method: 'slide',
+        args: [currentSlide.h, currentSlide.v]
+      }), window.location.origin);
+    });
   }
 
+  function setupTextArea() {
+    var textArea = $('<textarea>');
 
-  var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/chrome");
-  editor.getSession().setMode("ace/mode/markdown");
-  editor.getSession().setUseWrapMode(true);
-  editor.setShowPrintMargin(true);
+    $('#editor').html(textArea);
 
-  $.get('../slides.md', function(data) {
-    editor.setValue(data, -1);
-  });
+    $.get('../slides.md', function(data) {
+      textArea[0].value = data;
+    });
+  }
 
-  ace.edit('editor').getSession().selection.on('changeCursor', function(e) {
-    var cursorRow = ace.edit('editor').getCursorPosition().row;
-    var currentSlide = currentCursorSlide(cursorRow);
-    $('#slides-frame')[0].contentWindow.postMessage(JSON.stringify({
-      method: 'slide',
-      args: [currentSlide]
-    }), window.location.origin);
-  });
+  function updateTextModeLink(text, href) {
+    var link = $('#plain-text-link');
+    link.text(text);
+    link.attr('href', href);
+  }
+
+  if (plainTextMode()) {
+    setupTextArea();
+    updateTextModeLink('Rich-Text Mode', '/');
+  } else {
+    setupAceEditor();
+    updateTextModeLink('Plain-Text Mode', '/?plain-text-mode');
+  }
 });
-
-
-
